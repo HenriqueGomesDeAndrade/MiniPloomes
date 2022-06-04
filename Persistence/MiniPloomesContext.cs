@@ -13,15 +13,5 @@ namespace MiniPloomes.Persistence
             Contacts = new List<Contact>();
             Deals = new List<Deal>();
         }
-        public User ValidateUser(string email, string password) 
-        {
-            var user = Users.Find(u => u.Email == email && u.Password == password);
-            return user;
-        }
-
-        public User FindUserByToken(string token)
-        {
-            return Users.Find(u => u.Token == token);
-        }
     }
 }

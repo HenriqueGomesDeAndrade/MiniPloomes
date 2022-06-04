@@ -2,6 +2,7 @@
 using MiniPloomes.Entities;
 using MiniPloomes.Models.Deals;
 using MiniPloomes.Persistence;
+using MiniPloomes.Persistence.Repository;
 
 namespace MiniPloomes.Controllers
 {
@@ -9,22 +10,22 @@ namespace MiniPloomes.Controllers
     [Route("[controller]")]
     public class DealsController : ControllerBase
     {
-        private MiniPloomesContext _context;
-        public DealsController(MiniPloomesContext context)
+        private readonly IMiniPloomesRepository _repository;
+        public DealsController(IMiniPloomesRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet("{id}")]
         public IActionResult GetDealById([FromHeader] string token, int id)
         {
-            var user = _context.FindUserByToken(token);
+            var user = _repository.GetUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();
             }
 
-            var deal = _context.Deals.FirstOrDefault(c => c.Id == id && c.CreatorId == user.Id);
+            var deal = _repository.GetDealByIdAndUser(id, user.Id);
             if (deal == null)
             {
                 return NotFound();
@@ -36,20 +37,20 @@ namespace MiniPloomes.Controllers
         [HttpPost]
         public IActionResult CreateDeal([FromHeader] string token, AddDealInputModel model)
         {
-            var user = _context.FindUserByToken(token);
+            var user = _repository.GetUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();
             }
 
-            var contact = _context.Contacts.FirstOrDefault(c => c.Id == model.ContactId && c.CreatorId == user.Id);
+            var contact = _repository.GetContactByIdAndUser(model.ContactId, user.Id);
             if (contact == null)
             {
                 return NotFound();
             }
 
             var deal = new Deal(model.Title, model.Amount, model.ContactId, user.Id);
-            _context.Deals.Add(deal);
+            _repository.AddDeal(deal);
 
             return CreatedAtAction("GetDealById", new { id = deal.Id }, deal);
         }
@@ -57,19 +58,19 @@ namespace MiniPloomes.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateDeal([FromHeader] string token, AddDealInputModel model, int id)
         {
-            var user = _context.FindUserByToken(token);
+            var user = _repository.GetUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();
             }
 
-            var contact = _context.Contacts.FirstOrDefault(c => c.Id == model.ContactId && c.CreatorId == user.Id);
+            var contact = _repository.GetContactByIdAndUser(model.ContactId, user.Id);
             if (contact == null)
             {
                 return NotFound();
             }
 
-            var deal = _context.Deals.FirstOrDefault(c => c.Id == id && c.CreatorId == user.Id);
+            var deal = _repository.GetDealByIdAndUser(id, user.Id);
             if (deal == null)
             {
                 return NotFound();
@@ -83,19 +84,19 @@ namespace MiniPloomes.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteDeal([FromHeader] string token, int id)
         {
-            var user = _context.FindUserByToken(token);
+            var user = _repository.GetUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();
             }
 
-            var deal = _context.Deals.FirstOrDefault(c => c.Id == id && c.CreatorId == user.Id);
+            var deal = _repository.GetDealByIdAndUser(id, user.Id);
             if (deal == null)
             {
                 return NotFound();
             }
 
-            _context.Deals.Remove(deal);
+            _repository.RemoveDeal(deal);
             return Ok("The deal was deleted.");
         }
     }

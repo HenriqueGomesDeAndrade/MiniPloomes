@@ -2,6 +2,7 @@
 using MiniPloomes.Entities;
 using MiniPloomes.Models.Contacts;
 using MiniPloomes.Persistence;
+using MiniPloomes.Persistence.Repository;
 
 namespace MiniPloomes.Controllers
 {
@@ -9,22 +10,22 @@ namespace MiniPloomes.Controllers
     [Route("[controller]")]
     public class ContactsController : ControllerBase
     {
-        private readonly MiniPloomesContext _context;
-        public ContactsController(MiniPloomesContext context)
+        private readonly IMiniPloomesRepository _repository;
+        public ContactsController(IMiniPloomesRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet("{id}")]
         public IActionResult GetContactById([FromHeader] string token, int id)
         {
-            var user = _context.FindUserByToken(token);
+            var user = _repository.GetUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();
             }
 
-            var contact = _context.Contacts.FirstOrDefault(c => c.Id == id && c.CreatorId == user.Id);
+            var contact = _repository.GetContactByIdAndUser(id, user.Id);
             if (contact == null)
             {
                 return NotFound();
@@ -36,14 +37,14 @@ namespace MiniPloomes.Controllers
         [HttpPost]
         public IActionResult CreateContact([FromHeader] string token, AddContactInputModel model)
         {
-            var user = _context.FindUserByToken(token);
+            var user = _repository.GetUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();
             }
 
             var contact = new Contact(model.Name, user.Id);
-            _context.Contacts.Add(contact);
+            _repository.AddContact(contact);
 
             return CreatedAtAction("GetContactById", new { id = contact.Id }, contact);
         }
@@ -51,13 +52,13 @@ namespace MiniPloomes.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateContact([FromHeader] string token, AddContactInputModel model, int id)
         {
-            var user = _context.FindUserByToken(token);
+            var user = _repository.GetUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();
             }
 
-            var contact = _context.Contacts.FirstOrDefault(c => c.Id == id && c.CreatorId == user.Id);
+            var contact = _repository.GetContactByIdAndUser(id, user.Id);
             if (contact == null)
             {
                 return NotFound();
@@ -71,19 +72,19 @@ namespace MiniPloomes.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteContact([FromHeader] string token, int id)
         {
-            var user = _context.FindUserByToken(token);
+            var user = _repository.GetUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();
             }
 
-            var contact = _context.Contacts.FirstOrDefault(c => c.Id == id && c.CreatorId == user.Id);
+            var contact = _repository.GetContactByIdAndUser(id, user.Id);
             if (contact == null)
             {
                 return NotFound();
             }
 
-            _context.Contacts.Remove(contact);
+            _repository.RemoveContact(contact);
             return Ok("The contact was deleted.");
         }
     }

@@ -2,6 +2,7 @@
 using MiniPloomes.Entities;
 using MiniPloomes.Models;
 using MiniPloomes.Persistence;
+using MiniPloomes.Persistence.Repository;
 
 namespace MiniPloomes.Controllers
 {
@@ -9,17 +10,17 @@ namespace MiniPloomes.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly MiniPloomesContext _context;
-        public UsersController(MiniPloomesContext context)
+        private readonly IMiniPloomesRepository _repository;
+        public UsersController(IMiniPloomesRepository repository)
         {
-            _context = context; 
+            _repository = repository; 
         }
 
 
         [HttpGet]
         public IActionResult GetUserByToken([FromHeader] string token)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Token == token);
+            var user = _repository.GetUserByToken(token);
 
             if (user == null)
             {
@@ -32,7 +33,7 @@ namespace MiniPloomes.Controllers
         public IActionResult CreateUser(AddUserInputModel model)
         {
             User user = new User(model.Name, model.Email, model.Password);
-            _context.Users.Add(user);
+            _repository.AddUser(user);
             return CreatedAtAction("GetUserByToken", new { id = user.Id }, user);
         }
 
@@ -43,7 +44,7 @@ namespace MiniPloomes.Controllers
             {
                 if (!String.IsNullOrEmpty(model.Password))
                 {
-                    var user = _context.ValidateUser(model.Email, model.Password);
+                    var user = _repository.ValidateUser(model.Email, model.Password);
                     
                     if (user != null)
                     {
@@ -59,7 +60,7 @@ namespace MiniPloomes.Controllers
         [HttpPost("Logout")]
         public IActionResult Logout([FromHeader] string token)
         {
-            User user = _context.Users.FirstOrDefault(u => u.Token == token);
+            User user = _repository.GetUserByToken(token);
 
             if (user == null)
             {
@@ -73,7 +74,7 @@ namespace MiniPloomes.Controllers
         [HttpPut]
         public IActionResult UpdateUser([FromHeader] string token, AddUserInputModel model)
         {
-            User user = _context.Users.FirstOrDefault(u => u.Token == token);
+            User user = _repository.GetUserByToken(token);
 
             if (user == null)
             {
@@ -87,14 +88,14 @@ namespace MiniPloomes.Controllers
         [HttpDelete]
         public IActionResult DeleteUser([FromHeader] string token)
         {
-            User user = _context.Users.FirstOrDefault(u => u.Token == token);
+            User user = _repository.GetUserByToken(token);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(user);
+            _repository.RemoveUser(user);
             return Ok("The user was deleted");
         }
     }
