@@ -1,6 +1,14 @@
-﻿namespace MiniPloomes.Controllers
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace MiniPloomes.Controllers
 {
-    public class ContactsController
+    [ApiController]
+    [Route("[controller]")]
+    public class ContactsController : ControllerBase
     {
+        public ContactsController()
+        {
+
+        }
     }
 }
