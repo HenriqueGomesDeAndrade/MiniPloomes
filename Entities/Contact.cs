@@ -13,5 +13,11 @@
             CreatorId = creatorId;
             CreateDate = DateTime.Now;  
         }
+
+        public Contact UpdateContact(string name)
+        {
+            Name = name;
+            return this;
+        }
     }
 }

@@ -8,7 +8,6 @@
         public string Password { get; private set; }
         public string? Token { get; private set; }
         public DateTime CreateDate { get; private set; }
-        public bool IsLogged { get; private set; }
 
         public User(string name, string email, string password)
         {
@@ -17,19 +16,16 @@
             Password = password;
             Token = Guid.NewGuid().ToString();
             CreateDate = DateTime.Now;
-            IsLogged = true;
         }
 
-        public User Login()
+        public User UpdateToken()
         {
-            IsLogged = true;
             Token = Guid.NewGuid().ToString();
             return this;
         }
 
-        public User Logout()
+        public User RemoveToken()
         {
-            IsLogged = false;
             Token = null;
             return this;
         }

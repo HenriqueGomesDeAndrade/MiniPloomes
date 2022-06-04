@@ -7,6 +7,3 @@ ALTER COLUMN Token NVARCHAR(254) NULL
 
 ALTER TABLE [dbo].[Users]
 ADD CONSTRAINT UC_Token UNIQUE (Token);
-
-ALTER TABLE [dbo].[Users]
-ADD IsLoggedIn Bit NOT NULL

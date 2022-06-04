@@ -17,5 +17,13 @@
             CreatorId = creatorId;
             CreateDate = DateTime.Now;
         }
+
+        public Deal UpdateDeal(string title, decimal amount, int contactId)
+        {
+            Title = title;
+            Amount = amount;
+            ContactId = contactId;
+            return this;
+        }
     }
 }

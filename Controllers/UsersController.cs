@@ -17,7 +17,7 @@ namespace MiniPloomes.Controllers
 
 
         [HttpGet]
-        public IActionResult GetUserById([FromHeader] string token)
+        public IActionResult GetUserByToken([FromHeader] string token)
         {
             var user = _context.Users.FirstOrDefault(u => u.Token == token);
 
@@ -33,7 +33,7 @@ namespace MiniPloomes.Controllers
         {
             User user = new User(model.Name, model.Email, model.Password);
             _context.Users.Add(user);
-            return CreatedAtAction("GetUserById", new { id = user.Id }, user);
+            return CreatedAtAction("GetUserByToken", new { id = user.Id }, user);
         }
 
         [HttpPost("Login")]
@@ -47,7 +47,7 @@ namespace MiniPloomes.Controllers
                     
                     if (user != null)
                     {
-                        user = user.Login();
+                        user = user.UpdateToken();
                         return Ok(user);
                     }
                     return NotFound();
@@ -66,7 +66,7 @@ namespace MiniPloomes.Controllers
                 return BadRequest();
             }
 
-            user = user.Logout();
+            user = user.RemoveToken();
             return Ok(user);
         }
 
@@ -95,7 +95,7 @@ namespace MiniPloomes.Controllers
             }
 
             _context.Users.Remove(user);
-            return Ok("O usuário foi excluído");
+            return Ok("The user was deleted");
         }
     }
 }
