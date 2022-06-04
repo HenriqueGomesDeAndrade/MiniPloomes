@@ -19,7 +19,7 @@ namespace MiniPloomes.Controllers
         [HttpGet("{id}")]
         public IActionResult GetDealById([FromHeader] string token, int id)
         {
-            var user = _repository.GetUserByToken(token);
+            var user = _repository.GetExposableUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();
@@ -37,7 +37,7 @@ namespace MiniPloomes.Controllers
         [HttpPost]
         public IActionResult CreateDeal([FromHeader] string token, AddDealInputModel model)
         {
-            var user = _repository.GetUserByToken(token);
+            var user = _repository.GetExposableUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();
@@ -58,7 +58,7 @@ namespace MiniPloomes.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateDeal([FromHeader] string token, AddDealInputModel model, int id)
         {
-            var user = _repository.GetUserByToken(token);
+            var user = _repository.GetExposableUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();
@@ -84,7 +84,7 @@ namespace MiniPloomes.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteDeal([FromHeader] string token, int id)
         {
-            var user = _repository.GetUserByToken(token);
+            var user = _repository.GetExposableUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();

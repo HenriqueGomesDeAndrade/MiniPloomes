@@ -20,13 +20,13 @@ namespace MiniPloomes.Controllers
         [HttpGet]
         public IActionResult GetUserByToken([FromHeader] string token)
         {
-            var user = _repository.GetUserByToken(token);
+            var exposableUser = _repository.GetExposableUserByToken(token);
 
-            if (user == null)
+            if (exposableUser == null)
             {
                 return NotFound();
             }
-            return Ok(user);
+            return Ok(exposableUser);
         }
 
         [HttpPost]
@@ -34,7 +34,8 @@ namespace MiniPloomes.Controllers
         {
             User user = new User(model.Name, model.Email, model.Password);
             _repository.AddUser(user);
-            return CreatedAtAction("GetUserByToken", new { id = user.Id }, user);
+            var exposableUser = _repository.GetExposableUserByToken(user.Token);
+            return CreatedAtAction("GetUserByToken", new { id = exposableUser.Id }, exposableUser);
         }
 
         [HttpPost("Login")]
@@ -44,12 +45,12 @@ namespace MiniPloomes.Controllers
             {
                 if (!String.IsNullOrEmpty(model.Password))
                 {
-                    var user = _repository.ValidateUser(model.Email, model.Password);
+                    var exposableUser = _repository.ValidateUser(model.Email, model.Password);
                     
-                    if (user != null)
+                    if (exposableUser != null)
                     {
-                        user = user.UpdateToken();
-                        return Ok(user);
+                        exposableUser.Token =  _repository.UpdateTokenById(exposableUser.Id);
+                        return Ok(exposableUser);
                     }
                     return NotFound();
                 }
@@ -60,42 +61,43 @@ namespace MiniPloomes.Controllers
         [HttpPost("Logout")]
         public IActionResult Logout([FromHeader] string token)
         {
-            User user = _repository.GetUserByToken(token);
+            var exposableUser = _repository.GetExposableUserByToken(token);
 
-            if (user == null)
+            if (exposableUser == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            user = user.RemoveToken();
-            return Ok(user);
+            _repository.RemoveToken(token);
+            return NoContent();
         }
 
         [HttpPut]
         public IActionResult UpdateUser([FromHeader] string token, AddUserInputModel model)
         {
-            User user = _repository.GetUserByToken(token);
-
-            if (user == null)
-            {
-                return BadRequest();
-            }
-
-            user.UpdateUser(model.Name, model.Email, model.Password);   
-            return Ok(user);
-        }
-
-        [HttpDelete]
-        public IActionResult DeleteUser([FromHeader] string token)
-        {
-            User user = _repository.GetUserByToken(token);
+            var user = _repository.GetExposableUserByToken(token);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            _repository.RemoveUser(user);
+            _repository.UpdateUser(model.Name, model.Email, model.Password, token);
+            var exposableUser = _repository.GetExposableUserByToken(token);
+            return Ok(exposableUser);
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteUser([FromHeader] string token)
+        {
+            var user = _repository.GetExposableUserByToken(token);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            _repository.RemoveUser(token);
             return Ok("The user was deleted");
         }
     }

@@ -19,7 +19,7 @@ namespace MiniPloomes.Controllers
         [HttpGet("{id}")]
         public IActionResult GetContactById([FromHeader] string token, int id)
         {
-            var user = _repository.GetUserByToken(token);
+            var user = _repository.GetExposableUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();
@@ -37,7 +37,7 @@ namespace MiniPloomes.Controllers
         [HttpPost]
         public IActionResult CreateContact([FromHeader] string token, AddContactInputModel model)
         {
-            var user = _repository.GetUserByToken(token);
+            var user = _repository.GetExposableUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();
@@ -52,7 +52,7 @@ namespace MiniPloomes.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateContact([FromHeader] string token, AddContactInputModel model, int id)
         {
-            var user = _repository.GetUserByToken(token);
+            var user = _repository.GetExposableUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();
@@ -72,7 +72,7 @@ namespace MiniPloomes.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteContact([FromHeader] string token, int id)
         {
-            var user = _repository.GetUserByToken(token);
+            var user = _repository.GetExposableUserByToken(token);
             if (user == null)
             {
                 return Unauthorized();

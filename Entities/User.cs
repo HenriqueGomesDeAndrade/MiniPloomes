@@ -18,17 +18,7 @@
             CreateDate = DateTime.Now;
         }
 
-        public User UpdateToken()
-        {
-            Token = Guid.NewGuid().ToString();
-            return this;
-        }
 
-        public User RemoveToken()
-        {
-            Token = null;
-            return this;
-        }
 
         public User UpdateUser(string name, string email, string password)
         {
