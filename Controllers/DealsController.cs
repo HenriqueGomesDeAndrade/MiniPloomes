@@ -1,6 +1,14 @@
-﻿namespace MiniPloomes.Controllers
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace MiniPloomes.Controllers
 {
-    public class DealsController
+    [ApiController]
+    [Route("[controller]")]
+    public class DealsController: ControllerBase
     {
+        public DealsController()
+        {
+
+        }
     }
 }
