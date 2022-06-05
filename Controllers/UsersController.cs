@@ -82,7 +82,9 @@ namespace MiniPloomes.Controllers
                 return NotFound();
             }
 
-            _repository.UpdateUser(model.Name, model.Email, model.Password, token);
+            var newUser = new User(user.Id, model.Name, model.Email, model.Password, user.Token, user.CreateDate);
+
+            _repository.UpdateUser(newUser);
             var exposableUser = _repository.GetExposableUserByToken(token);
             return Ok(exposableUser);
         }

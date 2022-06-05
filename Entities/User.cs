@@ -17,5 +17,15 @@
             Token = Guid.NewGuid().ToString();
             CreateDate = DateTime.Now;
         }
+
+        public User(int id, string name, string email, string password, string? token, DateTime createDate)
+        {
+            Id = id;
+            Name = name;
+            Email = email;
+            Password = password;
+            Token = token;
+            CreateDate = createDate;
+        }
     }
 }

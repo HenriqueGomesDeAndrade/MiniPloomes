@@ -9,7 +9,7 @@ namespace MiniPloomes.Persistence.Repository
         ExposableUserModel GetExposableUserByToken(string token);
         ExposableUserModel ValidateUser(string email, string password);
         void AddUser(User user);
-        void UpdateUser(string name, string email, string password, string token);
+        void UpdateUser(User user);
         void RemoveUser(string token);
         void RemoveToken(string token);
         string UpdateTokenById(int id);

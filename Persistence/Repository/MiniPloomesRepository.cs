@@ -21,7 +21,8 @@ namespace MiniPloomes.Persistence.Repository
             using (SqlConnection connection =
                    new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Users WHERE Token = @token", connection);
+                SqlCommand cmd = new SqlCommand("GetUserByToken", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@token", token));
 
                 connection.Open();
@@ -48,7 +49,9 @@ namespace MiniPloomes.Persistence.Repository
             using (SqlConnection connection =
                    new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Users WHERE Email = @email AND Password = @password", connection);
+                SqlCommand cmd = new SqlCommand("ValidateUser", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
                 cmd.Parameters.Add(new SqlParameter("@email", email));
                 cmd.Parameters.Add(new SqlParameter("@password", password));
 
@@ -76,7 +79,9 @@ namespace MiniPloomes.Persistence.Repository
             using (SqlConnection connection =
                     new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("INSERT INTO Users VALUES (@name, @email, @password, @token, @createDate)", connection);
+                SqlCommand cmd = new SqlCommand("AddUser", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
                 cmd.Parameters.Add(new SqlParameter("@name", user.Name));
                 cmd.Parameters.Add(new SqlParameter("@email", user.Email));
                 cmd.Parameters.Add(new SqlParameter("@password", user.Password));
@@ -87,16 +92,18 @@ namespace MiniPloomes.Persistence.Repository
                 cmd.ExecuteNonQuery();
             }
         }
-        public void UpdateUser(string name, string email, string password, string token)
+        public void UpdateUser(User user)
         {
             using (SqlConnection connection =
                     new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("UPDATE Users SET Name = @name, Email = @email, Password = @password WHERE Token = @token", connection);
-                cmd.Parameters.Add(new SqlParameter("@name", name));
-                cmd.Parameters.Add(new SqlParameter("@email", email));
-                cmd.Parameters.Add(new SqlParameter("@password", password));
-                cmd.Parameters.Add(new SqlParameter("@token", token));
+                SqlCommand cmd = new SqlCommand("UpdateUser", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add(new SqlParameter("@name", user.Name));
+                cmd.Parameters.Add(new SqlParameter("@email", user.Email));
+                cmd.Parameters.Add(new SqlParameter("@password", user.Password));
+                cmd.Parameters.Add(new SqlParameter("@token", user.Token));
 
                 connection.Open();
                 cmd.ExecuteNonQuery();
@@ -107,7 +114,9 @@ namespace MiniPloomes.Persistence.Repository
             using (SqlConnection connection =
                     new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("DELETE FROM Users WHERE Token = @token", connection);
+                SqlCommand cmd = new SqlCommand("RemoveUserByToken", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
                 cmd.Parameters.Add(new SqlParameter("@token", token));
 
                 connection.Open();
@@ -120,7 +129,9 @@ namespace MiniPloomes.Persistence.Repository
             using (SqlConnection connection =
                     new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("UPDATE Users SET Token = NULL WHERE Token = @token", connection);
+                SqlCommand cmd = new SqlCommand("RemoveToken", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
                 cmd.Parameters.Add(new SqlParameter("@token", token));
 
                 connection.Open();
@@ -135,7 +146,9 @@ namespace MiniPloomes.Persistence.Repository
             using (SqlConnection connection =
                     new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("UPDATE Users SET Token = @newToken WHERE Id = @id", connection);
+                SqlCommand cmd = new SqlCommand("UpdateTokenById", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
                 cmd.Parameters.Add(new SqlParameter("@id", id));
                 cmd.Parameters.Add(new SqlParameter("@newToken", newToken));
 
