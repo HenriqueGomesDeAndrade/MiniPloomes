@@ -76,7 +76,8 @@ namespace MiniPloomes.Controllers
                 return NotFound();
             }
 
-            deal.UpdateDeal(model.Title, model.Amount, model.ContactId);
+            var dealUpdated = new Deal(id, model.Title, model.Amount, model.ContactId, deal.CreatorId, deal.CreateDate);
+            _repository.UpdateDeal(dealUpdated);
 
             return Ok(deal);
         }
@@ -96,7 +97,7 @@ namespace MiniPloomes.Controllers
                 return NotFound();
             }
 
-            _repository.RemoveDeal(deal);
+            _repository.RemoveDeal(id);
             return Ok("The deal was deleted.");
         }
     }

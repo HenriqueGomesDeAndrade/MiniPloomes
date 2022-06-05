@@ -44,9 +44,9 @@ namespace MiniPloomes.Controllers
             }
 
             var contact = new Contact(model.Name, user.Id);
-            _repository.AddContact(contact);
+             _repository.AddContact(contact);
 
-            return CreatedAtAction("GetContactById", new { id = contact.Id }, contact);
+            return CreatedAtAction("GetContactById", new { id = user.Id }, user);
         }
 
         [HttpPut("{id}")]
@@ -64,9 +64,10 @@ namespace MiniPloomes.Controllers
                 return NotFound();
             }
 
-            contact.UpdateContact(model.Name);
+            var contactModel = new Contact(id, model.Name, contact.CreatorId, contact.CreateDate);
+            _repository.UpdateContact(contactModel);
 
-            return Ok(contact);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
@@ -84,7 +85,7 @@ namespace MiniPloomes.Controllers
                 return NotFound();
             }
 
-            _repository.RemoveContact(contact);
+            _repository.RemoveContact(id);
             return Ok("The contact was deleted.");
         }
     }

@@ -18,12 +18,14 @@
             CreateDate = DateTime.Now;
         }
 
-        public Deal UpdateDeal(string title, decimal amount, int contactId)
+        public Deal(int id, string title, decimal amount, int contactId, int creatorId, DateTime createDate)
         {
+            Id = id;
             Title = title;
             Amount = amount;
             ContactId = contactId;
-            return this;
+            CreatorId = creatorId;
+            CreateDate = createDate;
         }
     }
 }

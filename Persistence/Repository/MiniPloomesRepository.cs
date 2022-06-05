@@ -1,4 +1,5 @@
 ﻿using MiniPloomes.Entities;
+using MiniPloomes.Models.Contacts;
 using MiniPloomes.Models.Users;
 using System.Data;
 using System.Data.SqlClient;
@@ -148,36 +149,143 @@ namespace MiniPloomes.Persistence.Repository
         //Contact
         public Contact GetContactByIdAndUser(int contactId, int userId)
         {
+            using (SqlConnection connection =
+                   new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Contacts WHERE Id = @contactId AND CreatorId = @userId;", connection);
+                cmd.Parameters.Add(new SqlParameter("@contactId", contactId));
+                cmd.Parameters.Add(new SqlParameter("@userId", userId));
 
-
-            return _context.Contacts.FirstOrDefault(c => c.Id == contactId && c.CreatorId == userId);
+                connection.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    Contact contact =
+                        new Contact(
+                            (int)reader["Id"],
+                            reader["Name"].ToString(),
+                            (int)reader["CreatorId"],
+                            Convert.ToDateTime(reader["CreateDate"].ToString())
+                    );
+                    connection.Close();
+                    return contact;
+                }
+            }
+            return null;
         }
-
         public void AddContact(Contact contact)
         {
-            _context.Contacts.Add(contact);
-        }
+            using (SqlConnection connection =
+                    new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("INSERT INTO Contacts OUTPUT INSERTED.Id VALUES (@name, @creatorId, @createDate)  ", connection);
+                cmd.Parameters.Add(new SqlParameter("@name", contact.Name));
+                cmd.Parameters.Add(new SqlParameter("@creatorId", contact.CreatorId));
+                cmd.Parameters.Add(new SqlParameter("@createDate", contact.CreateDate));
 
-        public void RemoveContact(Contact contact)
+                connection.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+        public void UpdateContact(Contact contact)
         {
-            _context.Contacts.Remove(contact);
+            using (SqlConnection connection =
+                                new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("UPDATE Contacts SET Name = @name WHERE Id = @id", connection);
+                cmd.Parameters.Add(new SqlParameter("@name", contact.Name));
+                cmd.Parameters.Add(new SqlParameter("@id", contact.Id));
+
+                connection.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+        public void RemoveContact(int id)
+        {
+            using (SqlConnection connection =
+                   new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("DELETE FROM Contacts WHERE Id = @id", connection);
+                cmd.Parameters.Add(new SqlParameter("@id", id));
+
+                connection.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
 
         //Deal
         public Deal GetDealByIdAndUser(int dealId, int userId)
         {
-            return _context.Deals.FirstOrDefault(c => c.Id == dealId && c.CreatorId == userId);
-        }
+            using (SqlConnection connection =
+                  new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Deals WHERE Id = @dealId AND CreatorId = @userId;", connection);
+                cmd.Parameters.Add(new SqlParameter("@dealId", dealId));
+                cmd.Parameters.Add(new SqlParameter("@userId", userId));
 
+                connection.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    Deal deal =
+                        new Deal(
+                            (int)reader["Id"],
+                            reader["Title"].ToString(),
+                            (decimal)reader["Amount"],
+                            (int)reader["ContactId"],
+                            (int)reader["CreatorId"],
+                            Convert.ToDateTime(reader["CreateDate"].ToString())
+                    );
+                    connection.Close();
+                    return deal;
+                }
+                return null;
+            }
+        }
         public void AddDeal(Deal deal)
         {
-            _context.Deals.Add(deal);
-        }
+            using (SqlConnection connection =
+                    new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("INSERT INTO Deals VALUES (@title, @amount, @contactId, @creatorId, @createdate ) ", connection);
+                cmd.Parameters.Add(new SqlParameter("@title", deal.Title));
+                cmd.Parameters.Add(new SqlParameter("@amount", deal.Amount));
+                cmd.Parameters.Add(new SqlParameter("@contactId", deal.ContactId));
+                cmd.Parameters.Add(new SqlParameter("@creatorId", deal.CreatorId));
+                cmd.Parameters.Add(new SqlParameter("@createDate", deal.CreateDate));
 
-        public void RemoveDeal(Deal deal)
+                connection.Open();
+                cmd.ExecuteNonQuery();
+            };
+        }
+        public void UpdateDeal(Deal deal)
         {
-            _context.Deals.Remove(deal);
+            using (SqlConnection connection =
+                                new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("UPDATE Deals SET Title = @title, Amount = @amount, ContactId = @contactId  WHERE Id = @id", connection);
+                cmd.Parameters.Add(new SqlParameter("@title", deal.Title));
+                cmd.Parameters.Add(new SqlParameter("@amount", deal.Amount));
+                cmd.Parameters.Add(new SqlParameter("@contactId", deal.ContactId));
+                cmd.Parameters.Add(new SqlParameter("@id", deal.Id));
+
+                connection.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+        }
+        public void RemoveDeal(int id)
+        {
+            using (SqlConnection connection =
+                   new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("DELETE FROM Deals WHERE Id = @id", connection);
+                cmd.Parameters.Add(new SqlParameter("@id", id));
+
+                connection.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
 

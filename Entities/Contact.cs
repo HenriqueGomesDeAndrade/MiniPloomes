@@ -14,10 +14,12 @@
             CreateDate = DateTime.Now;  
         }
 
-        public Contact UpdateContact(string name)
+        public Contact(int id, string name, int creatorId, DateTime createDate)
         {
+            Id = id;
             Name = name;
-            return this;
+            CreatorId = creatorId;
+            CreateDate = createDate;
         }
     }
 }
