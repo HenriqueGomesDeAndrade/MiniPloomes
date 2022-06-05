@@ -3,6 +3,7 @@ using MiniPloomes.Models.Contacts;
 using MiniPloomes.Models.Users;
 using System.Data;
 using System.Data.SqlClient;
+//using Microsoft.Data.SqlClient;
 
 namespace MiniPloomes.Persistence.Repository
 {
@@ -165,7 +166,9 @@ namespace MiniPloomes.Persistence.Repository
             using (SqlConnection connection =
                    new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Contacts WHERE Id = @contactId AND CreatorId = @userId;", connection);
+                SqlCommand cmd = new SqlCommand("GetContactByIdAndUser", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
                 cmd.Parameters.Add(new SqlParameter("@contactId", contactId));
                 cmd.Parameters.Add(new SqlParameter("@userId", userId));
 
@@ -186,18 +189,27 @@ namespace MiniPloomes.Persistence.Repository
             }
             return null;
         }
-        public void AddContact(Contact contact)
+        public int AddContact(Contact contact)
         {
             using (SqlConnection connection =
                     new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("INSERT INTO Contacts OUTPUT INSERTED.Id VALUES (@name, @creatorId, @createDate)  ", connection);
+                SqlCommand cmd = new SqlCommand("AddContact", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
                 cmd.Parameters.Add(new SqlParameter("@name", contact.Name));
                 cmd.Parameters.Add(new SqlParameter("@creatorId", contact.CreatorId));
                 cmd.Parameters.Add(new SqlParameter("@createDate", contact.CreateDate));
 
+                cmd.Parameters.Add(new SqlParameter("@id", SqlDbType.Int));
+                cmd.Parameters["@id"].Direction = ParameterDirection.Output;
+
                 connection.Open();
                 cmd.ExecuteNonQuery();
+
+                int id = Convert.ToInt32(cmd.Parameters["@id"].Value);
+                connection.Close();
+                return id;
             }
         }
         public void UpdateContact(Contact contact)
@@ -205,7 +217,9 @@ namespace MiniPloomes.Persistence.Repository
             using (SqlConnection connection =
                                 new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("UPDATE Contacts SET Name = @name WHERE Id = @id", connection);
+                SqlCommand cmd = new SqlCommand("UpdateContact", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
                 cmd.Parameters.Add(new SqlParameter("@name", contact.Name));
                 cmd.Parameters.Add(new SqlParameter("@id", contact.Id));
 
@@ -218,7 +232,9 @@ namespace MiniPloomes.Persistence.Repository
             using (SqlConnection connection =
                    new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("DELETE FROM Contacts WHERE Id = @id", connection);
+                SqlCommand cmd = new SqlCommand("RemoveContact", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
                 cmd.Parameters.Add(new SqlParameter("@id", id));
 
                 connection.Open();
@@ -233,7 +249,9 @@ namespace MiniPloomes.Persistence.Repository
             using (SqlConnection connection =
                   new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Deals WHERE Id = @dealId AND CreatorId = @userId;", connection);
+                SqlCommand cmd = new SqlCommand("GetDealByIdAndUser", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
                 cmd.Parameters.Add(new SqlParameter("@dealId", dealId));
                 cmd.Parameters.Add(new SqlParameter("@userId", userId));
 
@@ -256,20 +274,29 @@ namespace MiniPloomes.Persistence.Repository
                 return null;
             }
         }
-        public void AddDeal(Deal deal)
+        public int AddDeal(Deal deal)
         {
             using (SqlConnection connection =
                     new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("INSERT INTO Deals VALUES (@title, @amount, @contactId, @creatorId, @createdate ) ", connection);
+                SqlCommand cmd = new SqlCommand("AddDeal", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
                 cmd.Parameters.Add(new SqlParameter("@title", deal.Title));
                 cmd.Parameters.Add(new SqlParameter("@amount", deal.Amount));
                 cmd.Parameters.Add(new SqlParameter("@contactId", deal.ContactId));
                 cmd.Parameters.Add(new SqlParameter("@creatorId", deal.CreatorId));
                 cmd.Parameters.Add(new SqlParameter("@createDate", deal.CreateDate));
 
+                cmd.Parameters.Add(new SqlParameter("@id", SqlDbType.Int));
+                cmd.Parameters["@id"].Direction = ParameterDirection.Output;
+
                 connection.Open();
                 cmd.ExecuteNonQuery();
+
+                int id = Convert.ToInt32(cmd.Parameters["@id"].Value);
+                connection.Close();
+                return id;
             };
         }
         public void UpdateDeal(Deal deal)
@@ -277,7 +304,10 @@ namespace MiniPloomes.Persistence.Repository
             using (SqlConnection connection =
                                 new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("UPDATE Deals SET Title = @title, Amount = @amount, ContactId = @contactId  WHERE Id = @id", connection);
+                Console.WriteLine(deal.Title);
+                SqlCommand cmd = new SqlCommand("UpdateDeal", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
                 cmd.Parameters.Add(new SqlParameter("@title", deal.Title));
                 cmd.Parameters.Add(new SqlParameter("@amount", deal.Amount));
                 cmd.Parameters.Add(new SqlParameter("@contactId", deal.ContactId));
@@ -293,17 +323,15 @@ namespace MiniPloomes.Persistence.Repository
             using (SqlConnection connection =
                    new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("DELETE FROM Deals WHERE Id = @id", connection);
-                cmd.Parameters.Add(new SqlParameter("@id", id));
+                SqlCommand cmd = new SqlCommand("RemoveDeal", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
 
+                cmd.Parameters.Add(new SqlParameter("@id", id));
+                
                 connection.Open();
                 cmd.ExecuteNonQuery();
             }
         }
 
-
-
-
-        
     }
 }

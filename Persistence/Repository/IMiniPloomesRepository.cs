@@ -16,13 +16,13 @@ namespace MiniPloomes.Persistence.Repository
 
 
         Contact GetContactByIdAndUser(int contactId, int userId);
-        void AddContact(Contact contact);
+        int AddContact(Contact contact);
         void UpdateContact(Contact contact);
         void RemoveContact(int id);
 
 
         Deal GetDealByIdAndUser(int dealId, int userId);
-        void AddDeal(Deal deal);
+        int AddDeal(Deal deal);
         void UpdateDeal(Deal deal);
         void RemoveDeal(int id);
     }

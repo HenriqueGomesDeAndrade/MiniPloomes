@@ -50,9 +50,10 @@ namespace MiniPloomes.Controllers
             }
 
             var deal = new Deal(model.Title, model.Amount, model.ContactId, user.Id);
-            _repository.AddDeal(deal);
+            int dealId = _repository.AddDeal(deal);
+            var returnableDeal = new Deal(dealId, deal.Title, deal.Amount, deal.ContactId, deal.CreatorId, deal.CreateDate);
 
-            return CreatedAtAction("GetDealById", new { id = deal.Id }, deal);
+            return CreatedAtAction("GetDealById", new { id = dealId }, returnableDeal);
         }
 
         [HttpPut("{id}")]
@@ -79,7 +80,7 @@ namespace MiniPloomes.Controllers
             var dealUpdated = new Deal(id, model.Title, model.Amount, model.ContactId, deal.CreatorId, deal.CreateDate);
             _repository.UpdateDeal(dealUpdated);
 
-            return Ok(deal);
+            return Ok(dealUpdated);
         }
 
         [HttpDelete("{id}")]
