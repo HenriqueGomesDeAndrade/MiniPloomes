@@ -1,5 +1,14 @@
 USE MiniPloomes;
 GO
+
+CREATE PROCEDURE GetContacts
+	@userId int
+AS
+BEGIN
+	SELECT * FROM Contacts WHERE CreatorId = @userId;
+END
+GO
+
 CREATE PROCEDURE GetContactByIdAndUser
 	@contactId int,
 	@userId int

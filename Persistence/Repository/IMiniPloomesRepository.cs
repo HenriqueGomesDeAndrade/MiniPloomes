@@ -15,12 +15,14 @@ namespace MiniPloomes.Persistence.Repository
         string UpdateTokenById(int id);
 
 
+        List<Contact> GetContacts(int userId);
         Contact GetContactByIdAndUser(int contactId, int userId);
         int AddContact(Contact contact);
         void UpdateContact(Contact contact);
         void RemoveContact(int id);
 
 
+        List<Deal> GetDeals(int userId);
         Deal GetDealByIdAndUser(int dealId, int userId);
         int AddDeal(Deal deal);
         void UpdateDeal(Deal deal);

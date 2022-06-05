@@ -1,5 +1,14 @@
 USE MiniPloomes;
 GO
+
+CREATE PROCEDURE GetDeals
+	@userId int
+AS
+BEGIN
+	SELECT * FROM Deals WHERE CreatorId = @userId;
+END
+GO
+
 CREATE PROCEDURE GetDealByIdAndUser
 	@dealId int,
 	@userId int

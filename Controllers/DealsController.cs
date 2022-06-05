@@ -16,6 +16,24 @@ namespace MiniPloomes.Controllers
             _repository = repository;
         }
 
+        [HttpGet]
+        public IActionResult GetDeals([FromHeader] string token)
+        {
+            var user = _repository.GetExposableUserByToken(token);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var deals = _repository.GetDeals(user.Id);
+            if (deals == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(deals);
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetDealById([FromHeader] string token, int id)
         {

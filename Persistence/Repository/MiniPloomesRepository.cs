@@ -161,6 +161,39 @@ namespace MiniPloomes.Persistence.Repository
 
 
         //Contact
+        public List<Contact> GetContacts(int userId)
+        {
+            var contacts = new List<Contact>();
+            using (SqlConnection connection =
+                   new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("GetContacts", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+
+                cmd.Parameters.Add(new SqlParameter("@userId", userId));
+
+                connection.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Contact contact =
+                        new Contact(
+                            (int)reader["Id"],
+                            reader["Name"].ToString(),
+                            (int)reader["CreatorId"],
+                            Convert.ToDateTime(reader["CreateDate"].ToString())
+                    );
+
+                    contacts.Add(contact);
+                }
+            }
+            if (contacts.Any())
+            {
+                return contacts;
+            }
+            return null;
+        }
         public Contact GetContactByIdAndUser(int contactId, int userId)
         {
             using (SqlConnection connection =
@@ -244,6 +277,40 @@ namespace MiniPloomes.Persistence.Repository
 
 
         //Deal
+        public List<Deal> GetDeals(int userId)
+        {
+            var deals = new List<Deal>();
+            using (SqlConnection connection =
+                   new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("GetDeals", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add(new SqlParameter("@userId", userId));
+
+                connection.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Deal deal =
+                        new Deal(
+                            (int)reader["Id"],
+                            reader["Title"].ToString(),
+                            (decimal)reader["Amount"],
+                            (int)reader["ContactId"],
+                            (int)reader["CreatorId"],
+                            Convert.ToDateTime(reader["CreateDate"].ToString())
+                    );
+                    connection.Close();
+                    deals.Add(deal);
+                }
+                if (deals.Any())
+                {
+                    return deals;
+                }
+                return null;
+            }
+        }
         public Deal GetDealByIdAndUser(int dealId, int userId)
         {
             using (SqlConnection connection =

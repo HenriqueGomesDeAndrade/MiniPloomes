@@ -16,6 +16,24 @@ namespace MiniPloomes.Controllers
             _repository = repository;
         }
 
+        [HttpGet]
+        public IActionResult GetContacts([FromHeader] string token)
+        {
+            var user = _repository.GetExposableUserByToken(token);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var contacts = _repository.GetContacts(user.Id);
+            if (contacts == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(contacts);
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetContactById([FromHeader] string token, int id)
         {
