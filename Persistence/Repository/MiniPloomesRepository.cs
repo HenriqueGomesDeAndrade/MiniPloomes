@@ -38,12 +38,10 @@ namespace MiniPloomes.Persistence.Repository
                             Convert.ToDateTime(reader["CreateDate"].ToString()),
                             reader["Token"].ToString()
                     );
-                    connection.Close();
                     return exposableUser;
                 }
             }
             return null;
-            //return _context.Users.FirstOrDefault(u => u.Token == token);
         }
         public ExposableUserModel ValidateUser(string email, string password)
         {
@@ -73,7 +71,6 @@ namespace MiniPloomes.Persistence.Repository
                 }
             }
             return null;
-            //return _context.Users.Find(u => u.Email == email && u.Password == password);
         }
         public void AddUser(User user)
         {
@@ -301,7 +298,6 @@ namespace MiniPloomes.Persistence.Repository
                             (int)reader["CreatorId"],
                             Convert.ToDateTime(reader["CreateDate"].ToString())
                     );
-                    connection.Close();
                     deals.Add(deal);
                 }
                 if (deals.Any())
