@@ -4,14 +4,17 @@ namespace MiniPloomes.Persistence
 {
     public class MiniPloomesContext
     {
-        public List<User> Users { get; set; }
-        public List<Contact> Contacts { get; set; }
-        public List<Deal> Deals { get; set; }
-        public MiniPloomesContext()
+        private readonly IConfiguration _config;
+
+        public MiniPloomesContext(IConfiguration config)
         {
-            Users = new List<User>();
-            Contacts = new List<Contact>();
-            Deals = new List<Deal>();
+            _config = config;
+        }
+
+        public string GetConnectionString()
+        {
+            var connectionString = _config.GetConnectionString("MiniPloomesCS");
+            return connectionString;
         }
     }
 }

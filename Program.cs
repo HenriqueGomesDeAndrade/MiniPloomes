@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<MiniPloomesContext>();
 builder.Services.AddScoped<IMiniPloomesRepository, MiniPloomesRepository>();
 
+var connectionString = builder.Configuration.GetConnectionString("PackageTrackerCS");
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

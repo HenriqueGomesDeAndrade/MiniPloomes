@@ -29,10 +29,10 @@ BEGIN
 		U.Name 'UserName', U.Email 'UserEmail', U.Token 'UserToken', U.CreateDate 'UserCreateDate'
 	FROM 
 	[dbo].[Users] U
-	inner join [dbo].[Contacts] C
+	right join [dbo].[Contacts] C
 	ON C.CreatorId = U.Id
 	inner join [dbo].[Deals] D
-	On D.CreatorId = U.Id
+	On D.ContactId = C.Id
 	WHERE D.Id = @dealId AND D.CreatorId = @userId;
 END
 GO

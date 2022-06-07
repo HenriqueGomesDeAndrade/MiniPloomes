@@ -196,6 +196,7 @@ namespace MiniPloomes.Controllers
 
         /// <summary>
         /// Apaga um negócio.
+        /// </summary>
         /// <param name="token">Token do criador do negócio</param>
         /// <param name="id">Id do negócio</param>
         /// <returns>Negócio atualizado</returns>

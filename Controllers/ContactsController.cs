@@ -180,6 +180,7 @@ namespace MiniPloomes.Controllers
 
         /// <summary>
         /// Apaga um cliente.
+        /// </summary>
         /// <param name="token">Token do criador do cliente</param>
         /// <param name="id">Id do cliente</param>
         /// <returns>Cliente atualizado</returns>

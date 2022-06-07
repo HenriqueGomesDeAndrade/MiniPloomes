@@ -52,7 +52,7 @@ namespace MiniPloomes.Controllers
         /// {
         ///     "name" : "Henrique"  ,
         ///     "email": "hgomes.andrade@gmail.com",
-        ///     "password": "SenhaExemplo",
+        ///     "password": "SenhaExemplo"
         /// }
         /// </remarks>
         /// <param name="model">Dados de um usuário</param>
@@ -84,7 +84,7 @@ namespace MiniPloomes.Controllers
         /// <remarks>
         /// {
         ///     "email" : "emailexemplo"  ,
-        ///     "password": "SenhaExemplo",
+        ///     "password": "SenhaExemplo"
         /// }
         /// </remarks>
         /// <param name="model">Dados do Usuáio</param>
@@ -171,7 +171,7 @@ namespace MiniPloomes.Controllers
         /// {
         ///     "name" : "Henrique"  ,
         ///     "email": "hgomes.andrade@gmail.com",
-        ///     "password": "SenhaExemplo",
+        ///     "password": "SenhaExemplo"
         /// }    
         /// </remarks>
         /// <param name="token">token do usuário que será atualizado</param>

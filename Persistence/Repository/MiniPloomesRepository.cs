@@ -4,17 +4,17 @@ using MiniPloomes.Models.Deals;
 using MiniPloomes.Models.Users;
 using System.Data;
 using System.Data.SqlClient;
-//using Microsoft.Data.SqlClient;
 
 namespace MiniPloomes.Persistence.Repository
 {
     public class MiniPloomesRepository : IMiniPloomesRepository
     {
-        private readonly string connectionString = @"Server=Localhost; Database = Miniploomes; User Id = sa; Password =#gcFrgeux";
+        private readonly string connectionString;
         private readonly MiniPloomesContext _context;
         public MiniPloomesRepository(MiniPloomesContext context)
         {
             _context = context;
+            connectionString = _context.GetConnectionString();
         }
 
         //User
