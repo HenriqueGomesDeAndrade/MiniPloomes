@@ -54,7 +54,7 @@ namespace MiniPloomes.Controllers
         }
 
         /// <summary>
-        /// Consulta um cliente de um usuário.
+        /// Consulta um cliente de um usuário exibindo mais informações.
         /// </summary>
         /// <param name="token">Token do criador do cliente</param>
         /// <param name="id">Id do cliente</param>

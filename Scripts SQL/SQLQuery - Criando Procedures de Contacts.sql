@@ -9,6 +9,8 @@ BEGIN
 END
 GO
 
+
+
 CREATE PROCEDURE GetContactByIdAndUser
 	@contactId int,
 	@userId int
@@ -17,6 +19,30 @@ BEGIN
 	SELECT * FROM Contacts WHERE Id = @contactId AND CreatorId = @userId;
 END
 GO
+
+ALTER PROCEDURE GetContactByIdAndUser
+	@contactId int,
+	@userId int
+AS
+BEGIN
+	SELECT C.Id,
+		C.Name,
+		C.CreatorId,
+		C.CreateDate,
+		U.Name 'UserName',
+		U.Email,
+		U.Token,
+		U.CreateDate 'U_CreateDate'
+	FROM 
+	[dbo].[Contacts] C
+	inner join [dbo].[Users] U
+	ON C.CreatorId = U.Id
+	WHERE C.Id = @contactId AND CreatorId = @userId;
+END
+GO
+
+select * from users
+select * from contacts
 
 
 CREATE PROCEDURE AddContact

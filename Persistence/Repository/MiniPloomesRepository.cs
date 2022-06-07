@@ -1,5 +1,6 @@
 ﻿using MiniPloomes.Entities;
 using MiniPloomes.Models.Contacts;
+using MiniPloomes.Models.Deals;
 using MiniPloomes.Models.Users;
 using System.Data;
 using System.Data.SqlClient;
@@ -191,7 +192,7 @@ namespace MiniPloomes.Persistence.Repository
             }
             return null;
         }
-        public Contact GetContactByIdAndUser(int contactId, int userId)
+        public ContactWithUserModel GetContactByIdAndUser(int contactId, int userId)
         {
             using (SqlConnection connection =
                    new SqlConnection(connectionString))
@@ -206,12 +207,22 @@ namespace MiniPloomes.Persistence.Repository
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    Contact contact =
-                        new Contact(
+                    ExposableUserModel exposableUser =
+                        new ExposableUserModel(
+                            (int)reader["CreatorId"],
+                            reader["UserName"].ToString(),
+                            reader["Email"].ToString(),
+                            Convert.ToDateTime(reader["U_CreateDate"].ToString()),
+                            reader["Token"].ToString()
+                    );
+
+                    ContactWithUserModel contact =
+                        new ContactWithUserModel(
                             (int)reader["Id"],
                             reader["Name"].ToString(),
                             (int)reader["CreatorId"],
-                            Convert.ToDateTime(reader["CreateDate"].ToString())
+                            Convert.ToDateTime(reader["CreateDate"].ToString()),
+                            exposableUser
                     );
                     connection.Close();
                     return contact;
@@ -307,7 +318,7 @@ namespace MiniPloomes.Persistence.Repository
                 return null;
             }
         }
-        public Deal GetDealByIdAndUser(int dealId, int userId)
+        public DealWithUserAndContactModel GetDealByIdAndUser(int dealId, int userId)
         {
             using (SqlConnection connection =
                   new SqlConnection(connectionString))
@@ -322,14 +333,33 @@ namespace MiniPloomes.Persistence.Repository
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    Deal deal =
-                        new Deal(
+                    ExposableUserModel exposableUser =
+                        new ExposableUserModel(
+                            (int)reader["CreatorId"],
+                            reader["UserName"].ToString(),
+                            reader["UserEmail"].ToString(),
+                            Convert.ToDateTime(reader["UserCreateDate"].ToString()),
+                            reader["UserToken"].ToString()
+                    );
+
+                    Contact contact =
+                        new Contact(
+                            (int)reader["ContactId"],
+                            reader["ContactName"].ToString(),
+                            (int)reader["ContactCreatorId"],
+                            Convert.ToDateTime(reader["ContactCreateDate"].ToString())
+                    );
+
+                    DealWithUserAndContactModel deal =
+                        new DealWithUserAndContactModel(
                             (int)reader["Id"],
                             reader["Title"].ToString(),
                             (decimal)reader["Amount"],
                             (int)reader["ContactId"],
                             (int)reader["CreatorId"],
-                            Convert.ToDateTime(reader["CreateDate"].ToString())
+                            Convert.ToDateTime(reader["CreateDate"].ToString()),
+                            contact,
+                            exposableUser
                     );
                     connection.Close();
                     return deal;

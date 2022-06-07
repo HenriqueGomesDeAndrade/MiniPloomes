@@ -54,7 +54,7 @@ namespace MiniPloomes.Controllers
         }
 
         /// <summary>
-        /// Consulta um negócio de um usuário.
+        /// Consulta um negócio de um usuário exibindo mais informações.
         /// </summary>
         /// <param name="token">Token do criador do negócio</param>
         /// <param name="id">Id do negócio</param>

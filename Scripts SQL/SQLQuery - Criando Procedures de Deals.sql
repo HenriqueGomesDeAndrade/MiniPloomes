@@ -18,6 +18,25 @@ BEGIN
 END
 GO
 
+ALTER PROCEDURE GetDealByIdAndUser
+	@dealId int,
+	@userId int
+AS
+BEGIN
+	SELECT
+		D.Id, D.Title, D.Amount, D.ContactId, D.CreatorId, D.CreateDate,
+		C.Id 'ContactId', C.Name 'ContactName', C.CreatorId 'ContactCreatorId', C.CreateDate 'ContactCreateDate',
+		U.Name 'UserName', U.Email 'UserEmail', U.Token 'UserToken', U.CreateDate 'UserCreateDate'
+	FROM 
+	[dbo].[Users] U
+	inner join [dbo].[Contacts] C
+	ON C.CreatorId = U.Id
+	inner join [dbo].[Deals] D
+	On D.CreatorId = U.Id
+	WHERE D.Id = @dealId AND D.CreatorId = @userId;
+END
+GO
+
 
 CREATE PROCEDURE AddDeal
 	@title VARCHAR(max),

@@ -1,5 +1,6 @@
 ﻿using MiniPloomes.Entities;
 using MiniPloomes.Models.Contacts;
+using MiniPloomes.Models.Deals;
 using MiniPloomes.Models.Users;
 
 namespace MiniPloomes.Persistence.Repository
@@ -16,14 +17,14 @@ namespace MiniPloomes.Persistence.Repository
 
 
         List<Contact> GetContacts(int userId);
-        Contact GetContactByIdAndUser(int contactId, int userId);
+        ContactWithUserModel GetContactByIdAndUser(int contactId, int userId);
         int AddContact(Contact contact);
         void UpdateContact(Contact contact);
         void RemoveContact(int id);
 
 
         List<Deal> GetDeals(int userId);
-        Deal GetDealByIdAndUser(int dealId, int userId);
+        DealWithUserAndContactModel GetDealByIdAndUser(int dealId, int userId);
         int AddDeal(Deal deal);
         void UpdateDeal(Deal deal);
         void RemoveDeal(int id);
